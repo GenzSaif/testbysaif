@@ -1,0 +1,42 @@
+name: Extract Next.js v2
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract v2 project and replace static site
+        run: |
+          python3 - <<'PYEOF'
+          import os, shutil, zipfile
+          zipfile.ZipFile('nusrat-nextjs-v2.zip').extractall('v2tmp')
+          entries = os.listdir('v2tmp')
+          src = os.path.join('v2tmp', entries[0]) if len(entries) == 1 and os.path.isdir(os.path.join('v2tmp', entries[0])) else 'v2tmp'
+          for item in os.listdir(src):
+              dest = os.path.join('.', item)
+              if os.path.lexists(dest):
+                  if os.path.isdir(dest) and not os.path.islink(dest):
+                      shutil.rmtree(dest)
+                  else:
+                      os.remove(dest)
+              shutil.move(os.path.join(src, item), dest)
+          shutil.rmtree('v2tmp')
+          PYEOF
+          rm -f nusrat-nextjs-v2.zip index.html
+          rm -rf assets
+          rm -f .github/workflows/extract-v2.yml
+          test -f package.json || { echo 'package.json missing after extract'; exit 1; }
+          test -f public/photos/portrait.jpg || { echo 'portrait.jpg missing after extract'; exit 1; }
+          test -f next.config.js || { echo 'next.config.js missing after extract'; exit 1; }
+          find . -path ./.git -prune -o -type f -print | sort
+      - name: Commit v2 project
+        run: |
+          git config user.name "GenzSaif"
+          git config user.email "genz.saif@gmail.com"
+          git add -A
+          git status --short
+          git commit -m "Replace static site with Next.js v2 Gallery theme"
+          git push

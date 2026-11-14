@@ -1,0 +1,131 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  --font-display: "Playfair Display", Georgia, Palatino, serif;
+  --font-sans: "Sora", ui-sans-system, system-ui, sans-serif;
+}
+
+.dark {
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans), Sora, ui-sans-system, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  background: #f4ffeb;
+  color: #212121;
+  letter-spacing: 0;
+}
+
+/* Fluid type — clamp() everywhere, no fixed px sizes for headings. */
+.hero-title {
+  font-size: clamp(38px, 2.55vw + 22px, 64px);
+  line-height: 1;
+}
+.section-title {
+  font-size: clamp(40px, 3.17vw, 48px);
+  line-height: 1.2;
+}
+@media (max-width: 576px) {
+  .hero-title {
+    font-size: clamp(34px, 9vw, 44px);
+  }
+  .section-title {
+    font-size: clamp(22px, 6.11vw, 28px);
+  }
+}
+
+/* Glass chrome */
+.glass-dark {
+  background: rgba(0, 0, 0, 0.48);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid hsla(0, 0%, 100%, 0.08);
+}
+.glass-light {
+  background: hsla(0, 0%, 100%, 0.23);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid hsla(0, 0%, 100%, 0.4);
+}
+
+/* Signature arrow button: pill + trailing circle arrow, diagonal slide. */
+.arrow-btn .arrow-track {
+  transition: transform 0.28s ease;
+}
+.arrow-btn:hover .arrow-track {
+  transform: translate(4px, -4px);
+}
+
+/* Marquee — the only custom keyframe. */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee-track {
+  animation: marquee 28s linear infinite;
+}
+@media (max-width: 576px) {
+  .marquee-track {
+    animation-duration: 20s;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Scroll-statement word reveal */
+.reveal-word {
+  color: #cdd3d6;
+  transition: color 0.16s linear;
+}
+.reveal-word.on {
+  color: #194965;
+}
+.reveal-word.on-accent {
+  color: #58a60a;
+}
+.dark .reveal-word {
+  color: #3a3a3a;
+}
+.dark .reveal-word.on {
+  color: #dff1fc;
+}
+
+input[type="color"] {
+  appearance: none;
+  -webkit-appearance: none;
+  border: 1px solid #e5e7eb;
+  border-radius: 999px;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+}
+input[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 2px;
+}
+input[type="color"]::-webkit-color-swatch {
+  border: none;
+  border-radius: 999px;
+}
+
+input[type="range"] {
+  accent-color: #58a60a;
+}
